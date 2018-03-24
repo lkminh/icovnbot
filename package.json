@@ -1,0 +1,24 @@
+{
+  "name": "iconvnbot",
+  "version": "1.0.0",
+  "description": "A telegram bot for ICOVN.NET",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lkminh/icovnbot.git"
+  },
+  "keywords": [
+    "telegram;",
+    "bot;",
+    "icovn"
+  ],
+  "author": "minhkl",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lkminh/icovnbot/issues"
+  },
+  "homepage": "https://github.com/lkminh/icovnbot#readme"
+}
