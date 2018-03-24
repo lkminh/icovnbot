@@ -20,5 +20,9 @@
   "bugs": {
     "url": "https://github.com/lkminh/icovnbot/issues"
   },
-  "homepage": "https://github.com/lkminh/icovnbot#readme"
+  "homepage": "https://github.com/lkminh/icovnbot#readme",
+  "dependencies": {
+    "dotenv": "^5.0.1",
+    "node-telegram-bot-api": "^0.30.0"
+  }
 }
