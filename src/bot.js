@@ -1,5 +1,9 @@
 const TelegramBot = require('node-telegram-bot-api');
+const CronJob = require('node-cron');
 const storage = require('./storage');
+const { getPrices } = require('./features/price');
+
+
 class Bot {
   constructor(config) {
     if (!config.token) {
@@ -9,10 +13,16 @@ class Bot {
     this._welcomeMessage = config.welcomeMessage || null;
     this._ownerId = parseInt(config.ownerId, 10);
     this.setupEvents();
+    this.startCronJob();
   }
   setupEvents() {
     this._bot.onText(/\/welcome (.+)/, this.handleWelcomeCommand.bind(this));
     this._bot.on('new_chat_members', this.handleNewChatMembers.bind(this));
+  }
+  startCronJob() {
+    // At minute 0 past every hour from 0 through 23
+    var cron = CronJob.schedule('0 */1 * * *', () => this.fetchPrices());
+    cron.start();
   }
   handleWelcomeCommand(message) {
     const chatId = message.chat.id;
@@ -20,7 +30,7 @@ class Bot {
     if (this._ownerId !== senderId) {
     	return this.sendMessage(chatId, '`Forbidden!` Only the owner can set welcome message!');
     }
-	const text = message.text.split('/welcome')[1];	
+    const text = message.text.split('/welcome')[1];	
     if (text && text.length > 0) {
       this._welcomeMessage = text;
       storage.setItem('--welcome-message--', text).then(() => {
@@ -49,7 +59,15 @@ class Bot {
   	return result;
   }
   sendMessage(chatId, message, options) {
-    this._bot.sendMessage(chatId, message, options);
+    const finalOptions = Object.assign({parse_mode: 'Markdown'}, options);
+    this._bot.sendMessage(chatId, message, finalOptions);
+  }
+  fetchPrices() {
+  	const chatId = process.env.CHAT_ID;	
+  	getPrices()
+  	 .then((result) => this.sendMessage(chatId, result))
+  	 .catch((err) => this.sendMessage(chatId, err.message));
+  	
   }
 }
 

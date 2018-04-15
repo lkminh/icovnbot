@@ -1,5 +1,6 @@
 require('dotenv').config();
 
+
 const Bot = require('./bot');
 const storage = require('./storage');
 const token = process.env.BOT_TOKEN;
@@ -12,7 +13,7 @@ storage.init().then(() => {
     welcomeMessage : welcomeMessage,
     ownerId: ownerId,
   });
-  console.log('ICOVN bot is ready');
+  console.log('ICOVN bot is ready...');
 }).catch((e) => {
   console.log(`Failed to load storage. Error: ${e.message}`)
 });

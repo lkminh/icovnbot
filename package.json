@@ -24,6 +24,8 @@
   "homepage": "https://github.com/lkminh/icovnbot#readme",
   "dependencies": {
     "dotenv": "^5.0.1",
+    "isomorphic-fetch": "^2.2.1",
+    "node-cron": "^1.2.1",
     "node-persist": "^2.1.0",
     "node-telegram-bot-api": "^0.30.0"
   }
