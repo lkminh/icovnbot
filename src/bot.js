@@ -18,10 +18,11 @@ class Bot {
   setupEvents() {
     this._bot.onText(/\/welcome (.+)/, this.handleWelcomeCommand.bind(this));
     this._bot.on('new_chat_members', this.handleNewChatMembers.bind(this));
+    this._bot.onText(/\/test (.+)/, this.handleTestCommand.bind(this));
   }
   startCronJob() {
     // At minute 0 past every hour from 0 through 23
-    var cron = CronJob.schedule('0 */1 * * *', () => this.fetchPrices());
+    var cron = CronJob.schedule('0 */4 * * *', () => this.fetchPrices());
     cron.start();
   }
   handleWelcomeCommand(message) {
@@ -30,7 +31,7 @@ class Bot {
     if (this._ownerId !== senderId) {
     	return this.sendMessage(chatId, '`Forbidden!` Only the owner can set welcome message!');
     }
-    const text = message.text.split('/welcome')[1];	
+    const text = message.text.split('/welcome')[1];
     if (text && text.length > 0) {
       this._welcomeMessage = text;
       storage.setItem('--welcome-message--', text).then(() => {
@@ -50,7 +51,20 @@ class Bot {
       const welcomeMessage = this.parseText(newMember, this._welcomeMessage);
       this.sendMessage(chatId, welcomeMessage , {
         parse_mode: 'Markdown',
-      });	
+      });
+    }
+  }
+  handleTestCommand(message) {
+    const chatId = message.chat.id;
+    const senderId = message.from.id;
+    if (this._ownerId !== senderId) {
+    	return this.sendMessage(chatId, '`Forbidden!` Only the owner can use this command!');
+    }
+    const text = message.text.split('/test')[1];
+    if (text && text.length > 0) {
+      this.sendMessage(chatId, `You sent: \n${text}`);
+    } else {
+      this.sendMessage(chatId, 'Wrong format! Should be `/test _message_`');
     }
   }
   parseText(user, text) {
@@ -63,11 +77,11 @@ class Bot {
     this._bot.sendMessage(chatId, message, finalOptions);
   }
   fetchPrices() {
-  	const chatId = process.env.CHAT_ID;	
+  	const chatId = process.env.CHAT_ID;
   	getPrices()
   	 .then((result) => this.sendMessage(chatId, result))
   	 .catch((err) => this.sendMessage(chatId, err.message));
-  	
+
   }
 }
 
