@@ -19,6 +19,7 @@ class Bot {
     this._bot.onText(/\/welcome (.+)/, this.handleWelcomeCommand.bind(this));
     this._bot.on('new_chat_members', this.handleNewChatMembers.bind(this));
     this._bot.onText(/\/test (.+)/, this.handleTestCommand.bind(this));
+    this._bot.onText(/\/force (.+)/, this.handleForceCommand.bind(this));
   }
   startCronJob() {
     const manager = new CronJobManager(
@@ -74,6 +75,22 @@ class Bot {
       this.sendMessage(chatId, `You sent: \n${text}`);
     } else {
       this.sendMessage(chatId, 'Wrong format! Should be `/test _message_`');
+    }
+  }
+  handleForceCommand(message) {
+    const chatId = message.chat.id;
+    const senderId = message.from.id;
+    if (this._ownerId !== senderId) {
+    	return this.sendMessage(chatId, '`Forbidden!` Only the owner can use this command!');
+    }
+    const text = message.text.split('/force')[1].trim();
+    switch(text) {
+      case 'prices':
+        return this.fetchPrices();
+      case 'events':
+        return this.fetchEvents();
+      default:
+        return this.sendMessage(chatId, 'Invalid command!');
     }
   }
   parseText(user, text) {
