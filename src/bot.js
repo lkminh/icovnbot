@@ -1,8 +1,8 @@
 const TelegramBot = require('node-telegram-bot-api');
-const CronJob = require('node-cron');
+const CronJobManager = require('cron-job-manager');
 const storage = require('./storage');
 const { getPrices } = require('./features/price');
-
+const { getEvents } = require('./features/events');
 
 class Bot {
   constructor(config) {
@@ -21,9 +21,18 @@ class Bot {
     this._bot.onText(/\/test (.+)/, this.handleTestCommand.bind(this));
   }
   startCronJob() {
-    // At minute 0 past every hour from 0 through 23
-    var cron = CronJob.schedule('0 */4 * * *', () => this.fetchPrices());
-    cron.start();
+    const manager = new CronJobManager(
+      'prices',
+      '0 0/4 * * *',
+      () => this.fetchPrices(),
+    )
+    manager.add(
+      'events',
+      '0 2/4 * * *',
+      () => this.fetchEvents(),
+    );
+    manager.start('prices');
+    manager.start('events');
   }
   handleWelcomeCommand(message) {
     const chatId = message.chat.id;
@@ -77,11 +86,18 @@ class Bot {
     this._bot.sendMessage(chatId, message, finalOptions);
   }
   fetchPrices() {
-  	const chatId = process.env.CHAT_ID;
+    const chatId = process.env.CHAT_ID;
+    const ownerId = process.env.OWNER_ID;
   	getPrices()
   	 .then((result) => this.sendMessage(chatId, result))
-  	 .catch((err) => this.sendMessage(chatId, err.message));
-
+  	 .catch((err) => this.sendMessage(ownerId, err.message));
+  }
+  fetchEvents() {
+    const chatId = process.env.CHAT_ID;
+    const ownerId = process.env.OWNER_ID;
+  	getEvents()
+  	 .then((result) => this.sendMessage(chatId, result, {disable_web_page_preview: true}))
+  	 .catch((err) => this.sendMessage(ownerId, err.message));
   }
 }
 

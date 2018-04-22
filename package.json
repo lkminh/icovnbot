@@ -24,8 +24,11 @@
   },
   "homepage": "https://github.com/lkminh/icovnbot#readme",
   "dependencies": {
+    "axios": "^0.18.0",
+    "cron-job-manager": "^1.0.7",
     "dotenv": "^5.0.1",
     "isomorphic-fetch": "^2.2.1",
+    "moment": "^2.22.1",
     "node-cron": "^1.2.1",
     "node-persist": "^2.1.0",
     "node-telegram-bot-api": "^0.30.0"
