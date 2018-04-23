@@ -24,12 +24,12 @@ class Bot {
   startCronJob() {
     const manager = new CronJobManager(
       'prices',
-      '0 0/4 * * *',
+      '0 */4 * * *',
       () => this.fetchPrices(),
     )
     manager.add(
       'events',
-      '0 2/4 * * *',
+      '30 */6 * * *',
       () => this.fetchEvents(),
     );
     manager.start('prices');

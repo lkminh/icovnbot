@@ -1,5 +1,6 @@
 const axios = require('axios');
-const moment = require('moment');
+// const moment = require('moment');
+const moment = require('moment-timezone');
 
 
 function authenticate() {
@@ -27,6 +28,7 @@ function fetchEvents(token) {
         access_token: token,
         page: 1,
         max: 10,
+        showOnly: 'hot_events',
       }
     }).then(response => {
       resolve(response.data);
@@ -41,7 +43,7 @@ function getEvents() {
     .then(fetchEvents)
     .then(data => {
       const eventsText = data.map((event) => {
-        const eventDate = moment(event.date_event).format('MMM D');
+        const eventDate = moment(event.date_event).tz('Asia/Ho_Chi_Minh').format('MMM D');
         const coins = event.coins.map(coin => coin.symbol).join(', ');
         const title = event.title;
         const link = event.source;
