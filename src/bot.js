@@ -107,14 +107,14 @@ class Bot {
     const ownerId = process.env.OWNER_ID;
   	getPrices()
   	 .then((result) => this.sendMessage(chatId, result))
-  	 .catch((err) => this.sendMessage(ownerId, err.message));
+  	 .catch((err) => this.sendMessage(ownerId, `Fetch events error: *${err.message || err.statusText}*`));
   }
   fetchEvents() {
     const chatId = process.env.CHAT_ID;
     const ownerId = process.env.OWNER_ID;
   	getEvents()
   	 .then((result) => this.sendMessage(chatId, result, {disable_web_page_preview: true}))
-  	 .catch((err) => this.sendMessage(ownerId, err.message));
+     .catch((err) => this.sendMessage(ownerId, `Fetch events error: *${err.message || err.statusText}*`));
   }
 }
 

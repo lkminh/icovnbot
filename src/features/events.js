@@ -1,7 +1,8 @@
 const axios = require('axios');
-// const moment = require('moment');
 const moment = require('moment-timezone');
+const Constants = require('../constants');
 
+axios.defaults.headers.common['user-agent'] = Constants.USER_AGENT;
 
 function authenticate() {
   return new Promise((resolve, reject) => {
@@ -27,8 +28,9 @@ function fetchEvents(token) {
       params: {
         access_token: token,
         page: 1,
-        max: 10,
+        max: 30,
         showOnly: 'hot_events',
+        dateRangeEnd: moment().add(7, 'days').format('DD/MM/YYYY'),
       }
     }).then(response => {
       resolve(response.data);
@@ -47,7 +49,7 @@ function getEvents() {
         const coins = event.coins.map(coin => coin.symbol).join(', ');
         const title = event.title;
         const link = event.source;
-        return `[${coins}: ${title} - ${eventDate}](${link})`
+        return `+ [${coins}: ${title} - ${eventDate}](${link})`
       }).join('\n');
       resolve(`📅 *Các sự kiện sắp diễn ra:* \n\n${eventsText}\n\nXem thêm tại https://ICOVN.NET`);
     })
