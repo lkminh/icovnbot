@@ -3,7 +3,7 @@ const CronJobManager = require('cron-job-manager');
 const storage = require('./storage');
 const { getPrices } = require('./features/price');
 const { getEvents } = require('./features/events');
-
+const news = require('./staticNews');
 class Bot {
   constructor(config) {
     if (!config.token) {
@@ -29,11 +29,17 @@ class Bot {
     )
     manager.add(
       'events',
-      '30 */6 * * *',
+      '30 */4 * * *',
       () => this.fetchEvents(),
+    );
+    manager.add(
+      'announce',
+      '15 */2 * * *',
+      () => this.announce(),
     );
     manager.start('prices');
     manager.start('events');
+    manager.start('announce');
   }
   handleWelcomeCommand(message) {
     const chatId = message.chat.id;
@@ -89,6 +95,8 @@ class Bot {
         return this.fetchPrices();
       case 'events':
         return this.fetchEvents();
+      case 'announce':
+        return this.announce();
       default:
         return this.sendMessage(chatId, 'Invalid command!');
     }
@@ -115,6 +123,12 @@ class Bot {
   	getEvents()
   	 .then((result) => this.sendMessage(chatId, result, {disable_web_page_preview: true}))
      .catch((err) => this.sendMessage(ownerId, `Fetch events error: *${err.message || err.statusText}*`));
+  }
+  announce() {
+    const chatId = process.env.CHAT_ID;
+    this.sendMessage(chatId, news, {
+      parse_mode: 'HTML',
+    });
   }
 }
 
