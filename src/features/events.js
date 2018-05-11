@@ -44,12 +44,12 @@ function getEvents() {
     authenticate()
     .then(fetchEvents)
     .then(data => {
-      const eventsText = data.map((event) => {
+      const eventsText = data.map((event, index) => {
         const eventDate = moment(event.date_event).tz('Asia/Ho_Chi_Minh').format('MMM D');
         const coins = event.coins.map(coin => coin.symbol).join(', ');
         const title = event.title;
         const link = event.source;
-        return `+ [${coins}: ${title} - ${eventDate}](${link})`
+        return `${index + 1}. [${coins}: ${title} - ${eventDate}](${link})`
       }).join('\n');
       resolve(`📅 *Các sự kiện sắp diễn ra:* \n\n${eventsText}\n\nXem thêm tại https://ICOVN.NET`);
     })
