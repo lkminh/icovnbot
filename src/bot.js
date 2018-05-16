@@ -32,14 +32,14 @@ class Bot {
       '30 */4 * * *',
       () => this.fetchEvents(),
     );
-    manager.add(
-      'announce',
-      '15 */2 * * *',
-      () => this.announce(),
-    );
+    // manager.add(
+    //   'announce',
+    //   '15 */2 * * *',
+    //   () => this.announce(),
+    // );
     manager.start('prices');
     manager.start('events');
-    manager.start('announce');
+    // manager.start('announce');
   }
   handleWelcomeCommand(message) {
     const chatId = message.chat.id;
