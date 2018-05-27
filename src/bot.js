@@ -125,10 +125,10 @@ class Bot {
      .catch((err) => this.sendMessage(ownerId, `Fetch events error: *${err.message || err.statusText}*`));
   }
   announce() {
-    const chatId = process.env.CHAT_ID;
-    this.sendMessage(chatId, news, {
-      parse_mode: 'HTML',
-    });
+    // const chatId = process.env.CHAT_ID;
+    // this.sendMessage(chatId, news, {
+    //   parse_mode: 'HTML',
+    // });
   }
 }
 
