@@ -25,17 +25,17 @@ class Bot {
     const manager = new CronJobManager(
       'prices',
       '0 */4 * * *',
-      () => this.fetchPrices(),
+      () => this.fetchPrices()
     )
     manager.add(
       'events',
       '30 */4 * * *',
-      () => this.fetchEvents(),
+      () => this.fetchEvents()
     );
     manager.add(
       'announce',
       '15 */2 * * *',
-      () => this.announce(),
+      () => this.announce()
     );
     manager.start('prices');
     manager.start('events');
